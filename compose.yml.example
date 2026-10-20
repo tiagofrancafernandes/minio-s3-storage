@@ -5,7 +5,7 @@ services:
   # ----------------------------------------------------------------------------
   minio:
     image: ${MINIO_IMAGE:-pgsty/silo:latest}
-    container_name: sva-minio
+    container_name: global-tools-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
