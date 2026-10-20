@@ -1,0 +1,48 @@
+*no*commit*
+*No*Commit*
+*NO*COMMIT*
+*.bak
+*.bkp.*
+*.bkp
+*.log
+*.swp
+*.out
+*.zip
+*.del
+*.del.*
+_ide_helper*
+*.localonly.*
+
+
+# PHP / Composer / Laravel
+vendor/
+.env
+.env.production
+.env.staging
+.env.local
+.phpunit.result.cache
+.phpunit.cache/
+homestead.json
+.vagrant
+auth.json
+
+# IDEs
+.idea/
+# .vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+/*-IMPLEMENTATION.md
+.aider*
+.vercel
+
+# Docker Compose local
+compose*.yml
+compose*.yaml
+docker-compose*.yml
+docker-compose*.yaml
+!compose*.example
+!docker-compose*.example

@@ -1,0 +1,30 @@
+services:
+  # ----------------------------------------------------------------------------
+  # Object Storage S3 Compatível (MinIO)
+  # Portas expostas no host exclusivamente via Gateway Nginx (9000 e 9001)
+  # ----------------------------------------------------------------------------
+  minio:
+    image: ${MINIO_IMAGE:-pgsty/silo:latest}
+    container_name: sva-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-password}
+    expose:
+      - "9000"
+      - "9001"
+    volumes:
+      - ./data/minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - global-minio-network
+
+
+networks:
+  global-minio-network:
+    driver: bridge
