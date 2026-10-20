@@ -1,4 +1,23 @@
 services:
+# ----------------------------------------------------------------------------
+  # Gateway / Reverse Proxy Nginx
+  # Único serviço com portas expostas no host para as aplicações web e serviços
+  # ----------------------------------------------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: global-tools-nginx
+    restart: unless-stopped
+    ports:
+      - "${PORT_MINIO_API:-9000}:9000"
+      - "${PORT_MINIO_CONSOLE:-9001}:9001"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - minio
+    networks:
+      - global-minio-network
+
   # ----------------------------------------------------------------------------
   # Object Storage S3 Compatível (MinIO)
   # Portas expostas no host exclusivamente via Gateway Nginx (9000 e 9001)
