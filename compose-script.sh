@@ -15,6 +15,13 @@ set -e
 ##   APP_ENV=production ./compose-script.sh ps
 ## ==============================================================================
 
+VERBOSE_MODE="${VERBOSE_MODE:-0}"
+
+function fn__print_debug_mgs() {
+    if [[ $VERBOSE_MODE == 'true' || $VERBOSE_MODE == '1' ]]; then
+        echo "$@"
+    fi
+}
 
 ## Diretório raiz onde este script está localizado
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -51,11 +58,11 @@ elif [ -f "$PROJECT_ROOT/compose.custom.yml" ]; then
     COMPOSE_PROD="$PROJECT_ROOT/compose.custom.yml"
 else
     if [[ -f $COMPOSE_BASE ]]; then
-        echo "Nenhum arquivo compose.prod.yml, compose.production.yml ou compose.custom.yml encontrado em
+        fn__print_debug_mgs "Nenhum arquivo compose.prod.yml, compose.production.yml ou compose.custom.yml encontrado em
             '$PROJECT_ROOT,'
             usando apenas
             '$COMPOSE_BASE'" >&2
-        echo;
+        fn__print_debug_mgs;
     else
         echo "Erro: Nenhum arquivo compose.prod.yml, compose.production.yml ou compose.custom.yml encontrado em $PROJECT_ROOT" >&2
         exit 1
@@ -80,7 +87,7 @@ fi
 
 ENV_ARGS=()
 if [ -n "$ENV_FILE" ]; then
-    echo "[prod.sh] Carregando variáveis de: $(basename "$ENV_FILE")" >&2
+    fn__print_debug_mgs "[prod.sh] Carregando variáveis de: $(basename "$ENV_FILE")" >&2
     ## Exporta variáveis para o shell para garantir compatibilidade com qualquer versão do compose
     set -a
     ## shellcheck disable=SC1090
@@ -91,10 +98,10 @@ else
     echo "[prod.sh] Nenhum arquivo .env (.env.production, .env.prod ou .env) encontrado. Utilizando variáveis de ambiente do sistema." >&2
 fi
 
-echo ;
-echo "COMPOSE_BASE: $COMPOSE_BASE"
-echo "COMPOSE_PROD: $COMPOSE_PROD"
-echo ;
+fn__print_debug_mgs ;
+fn__print_debug_mgs "COMPOSE_BASE: $COMPOSE_BASE"
+fn__print_debug_mgs "COMPOSE_PROD: $COMPOSE_PROD"
+fn__print_debug_mgs ;
 
 ## Executa o comando compose apropriado com os caminhos absolutos dos arquivos de produção
 if [ -v COMPOSE_PROD ]; then
